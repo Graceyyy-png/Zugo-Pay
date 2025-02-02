@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="dash.css">
+    <title>Sign Up</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        .background { 
+            background-image: url('letter.jpg'); 
+            background-size: cover; 
+            background-position: center; 
+            color: white; 
+            height: 100vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            flex-direction: column; 
+        }
+        .navbar {
+            position: absolute; 
+            top: 20px; 
+            right: 20px; 
+            background-color: rgba(35, 36, 36, 0.8); 
+            border-radius: 5px; 
+            display: flex; 
+            padding: 10px; 
+        }
+        .navbar a {
+            background-color: #4cacaf; 
+            color: white; 
+            padding: 10px 20px; 
+            border-radius: 5px; 
+            text-decoration: none; 
+            margin: 0 10px; 
+            transition: background-color 0.3s; 
+        }
+        .navbar a:hover {
+            background-color: #8e3e63; 
+        }
+        .form-container {
+            background-color: rgb(10, 10, 10);
+            padding: 40px; 
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 400px; 
+            height: auto; 
+            font-size: 16px; 
+        }
+        .form-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .form-group button {
+            width: 100%;
+            padding: 10px;
+            background-color: #ac23a0;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .form-group button:hover {
+            background-color: #3e4da3;
+        }
+        p {
+            text-align: center;
+        }
+        .flash-message {
+    padding: 10px;
+    margin: 20px 0;
+    border: 1px solid red;
+    background-color: #f8d7da;
+    color: #721c24;
+    display: none; 
+}
+
+.flash-message.success {
+    border-color: green;
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.form-group input:valid {
+            border-color: green;
+        }
+
+        .form-group input:invalid {
+            border-color: red;
+        }
+
+        .password-requirements {
+            font-size: 0.8em;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        /* Loading spinner */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    
+    </style>
+    <script>
+
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('signupForm');
+    const flashMessage = document.getElementById('flash-message');
+    const submitBtn = document.getElementById('submitBtn');
+
+    // Password match validation
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('confirm_password');
+
+    confirmPasswordInput.addEventListener('input', function() {
+        if (passwordInput.value !== confirmPasswordInput.value) {
+            confirmPasswordInput.setCustomValidity('Passwords do not match');
+        } else {
+            confirmPasswordInput.setCustomValidity('');
+        }
+    });
+
+    // Show flash message
+    function showFlashMessage(message, type) {
+        flashMessage.textContent = message;
+        flashMessage.className = `flash-message ${type}`;
+        flashMessage.style.display = 'block';
+        
+        setTimeout(() => {
+            flashMessage.style.display = 'none';
+        }, 3000);
+    }
+
+    // Form submission handler
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        // Validate form
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
+
+        // Prepare form data
+        const formData = {
+            username: document.getElementById('username').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            password: document.getElementById('password').value,
+            confirm_password: document.getElementById('confirm_password').value
+        };
+
+        // Disable submit button and show loading
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = 'Creating Account <div class="spinner"></div>';
+
+        try {
+            // Send signup request
+            const response = await fetch('http://localhost:5000/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            });
+
+            // Log the raw response for debugging
+            const responseText = await response.text();
+            console.log('Raw Response:', responseText);
+
+            // Parse the response
+            let result;
+            try {
+                result = JSON.parse(responseText);
+            } catch (parseError) {
+                console.error('JSON Parsing Error:', parseError);
+                showFlashMessage('Error parsing server response', 'error');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Create Account';
+                return;
+            }
+
+            // Check response status
+            if (!response.ok) {
+                // Handle non-200 responses
+                showFlashMessage(result.message || 'An error occurred', 'error');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Create Account';
+                return;
+            }
+
+            // Handle successful response
+            if (result.success) {
+                // Show success message
+                showFlashMessage(result.message, 'success');
+                
+                // Store user info in localStorage
+                localStorage.setItem('userEmail', formData.email);
+
+                // Redirect to user dashboard after successful signup
+                setTimeout(() => {
+                    // Redirect to user dashboard
+                    window.location.href = 'user_dashboard.html';
+                }, 2000);
+            } else {
+                // Show error message from server
+                showFlashMessage(result.message || 'Registration failed', 'error');
+                
+                // Re-enable submit button
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Create Account';
+            }
+        } catch (error) {
+            // Comprehensive error logging
+            console.error('Signup error details:', {
+                name: error.name,
+                message: error.message,
+                stack: error.stack
+            });
+
+            // Detailed error message
+            let errorMessage = 'Network error. Please try again.';
+            if (error instanceof TypeError) {
+                errorMessage = 'Unable to connect to the server. Please check your network connection.';
+            }
+
+            showFlashMessage(errorMessage, 'error');
+            
+            // Re-enable submit button
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Create Account';
+        }
+    });
+});
+    </script>
+</head>
+<body class="background">
+    <div class="form-container">
+        <h2>Sign Up to Zugo</h2>
+
+        <div id="flash-message" class="flash-message" style="display: none;"></div>
+
+        <form id="signupForm" novalidate>
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input 
+                    type="text" 
+                    id="username" 
+                    name="username" 
+                    required 
+                    minlength="3" 
+                    maxlength="20"
+                    pattern="^[a-zA-Z0-9_]{3,20}$"
+                    title="3-20 characters, alphanumeric and underscore only"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address:</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    required
+                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                    title="Enter a valid email address"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone Number:</label>
+                <input 
+                    type="tel" 
+                    id="phone" 
+                    name="phone" 
+                    required 
+                    pattern="^254\d{9}$" 
+                    title="Phone number must start with 254 and have 12 digits"
+                >
+                <small class="password-requirements">Format: 254712345678</small>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    required 
+                    minlength="8"
+                    pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+                    title="Must include uppercase, lowercase, number, and special character"
+                >
+                <small class="password-requirements">
+                    At least 8 characters, 1 uppercase, 1 lowercase, 1 number, 1 special character
+                </small>
+            </div>
+
+            <div class="form-group">
+                <label for="confirm_password">Confirm Password:</label>
+                <input 
+                    type="password" 
+                    id="confirm_password" 
+                    name="confirm_password" 
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <button type="submit" id="submitBtn">
+                    Create Account
+                </button>
+            </div>
+        </form>
+
+        <p>Already have an account? <a href="login.html">Login</a></p>
+    </div>
+
+</body>
+</html>

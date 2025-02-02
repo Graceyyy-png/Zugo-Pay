@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zugo Fee Payment Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+            text-decoration: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: #0F172A;
+            line-height: 1.6;
+            text-decoration: none;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #333;
+            color: rgba(250, 241, 241, 0.993);
+            padding: 15px 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .nav-buttons {
+        display: flex;
+        gap: 15px;
+    }
+
+    .nav-button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        transition: color 0.3s ease;
+    }
+
+    .nav-button a {
+        color: white;  
+        text-decoration: none;
+        font-size: 16px;
+        padding: 10px 15px;
+        transition: color 0.3s ease;
+    }
+
+    .nav-button a:hover {
+        color: #4CAF50;  
+    }
+
+        .dashboard-container {
+            display: flex;
+            margin: 20px;
+            gap: 20px;
+        }
+
+        .menu-container {
+            width: 250px;
+            background-color: rgba(22, 20, 20, 0.226);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 20px;
+            color: #f9f9f9;
+        }
+
+        .main-content {
+            flex-grow: 1;
+        }
+
+        .dashboard-header {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .dashboard-sections {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .section {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .section:hover {
+            transform: scale(1.02);
+        }
+
+        .section-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #4CAF50;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .nav-buttons, .wallet-button {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .nav-button:hover {
+            color: #4CAF50;
+        }
+
+        .wallet-button {
+            background-color: #5b348f;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .menu-item {
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .menu-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-sections {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        body {
+    font-family: Arial, sans-serif;
+}
+
+.popup {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.popup-content {
+    background-color: white;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px;
+    text-align: center;
+    position: relative;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.payment-options, .bank-options, .mpesa-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+button {
+    padding: 10px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+input {
+    margin: 10px 0;
+    padding: 8px;
+    width: 100%;
+    box-sizing: border-box;
+}
+* {
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+        }
+
+        /* Popup styles */
+        .popup {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .popup-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            text-align: center;
+            position: relative;
+            max-height: 80%;
+            overflow-y: auto;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .popup-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .popup-options button {
+            padding: 10px;
+            margin: 5px;
+            cursor: pointer;
+            background-color: #f0f0f0;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .popup-options button:hover {
+            background-color: #e0e0e0;
+        }
+
+            /* Additional styles for wallet connection popup */
+    .wallet-options {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        padding: 20px;
+    }
+
+    .wallet-option {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 15px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .wallet-option:hover {
+        background-color: #f0f0f0;
+        transform: scale(1.05);
+    }
+
+    .wallet-option img {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 10px;
+    }
+
+    #manual-wallet-form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    #manual-wallet-form input,
+    #manual-wallet-form select {
+        padding: 10px;
+        border: 1px solid #e0e0e0;
+        border-radius: 5px;
+    }
+
+    #manual-wallet-form button {
+        padding: 12px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    #manual-wallet-form button:hover {
+        background-color: #45a049;
+    }
+
+        /* Popup Styles */
+        .popup {
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        display: none;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .popup-content {
+        background-color: white;
+        padding: 30px;
+        border-radius: 10px;
+        width: 90%;
+        max-width: 500px;
+        max-height: 80vh;
+        overflow-y: auto;
+        position: relative;
+    }
+
+    .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 24px;
+        cursor: pointer;
+    }
+
+    /* Form Styles */
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+    .form-group small {
+        color: #666;
+        font-size: 0.8em;
+    }
+
+    /* Payment Method Selector */
+    .payment-method-selector {
+        display: flex;
+        justify-content: space-between;
+        gap: 15px;
+    }
+
+    .payment-method-selector button {
+        flex-grow: 1;
+        padding: 15px;
+        background-color: #f0f0f0;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .payment-method-selector button:hover {
+        background-color: #e0e0e0;
+    }
+
+    /* Cookie Consent Styles */
+    .cookie-content {
+        text-align: center;
+    }
+
+    .cookie-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .cookie-buttons button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    #accept-cookies {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    #manage-cookies {
+        background-color: #f0f0f0;
+        color: #333;
+    }
+
+    /* Transfer Overview Popup Styles */
+    .transfer-overview-content {
+        width: 90%;
+        max-width: 800px;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    .transaction-summary {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+
+    .summary-card {
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        padding: 15px;
+        width: 100%;
+    }
+
+    .summary-details {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .transaction-filters {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .transaction-filters select {
+        flex-grow: 1;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+    .transaction-history table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .transaction-history th, 
+    .transaction-history td {
+        border: 1px solid #e0e0e0;
+        padding: 10px;
+        text-align: left;
+    }
+
+    .transaction-history thead {
+        background-color: #f0f0f0;
+    }
+
+    .status-success {
+        color: green;
+        font-weight: bold;
+    }
+
+    .status-pending {
+        color: orange;
+        font-weight: bold;
+    }
+
+    .transaction-chart {
+        margin-top: 20px;
+        background-color: #f9f9f9;
+        padding: 15px;
+        border-radius: 8px;
+    }
+
+
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo"> Zugo  Crypto to Fee</div>
+        <div class="nav-buttons">
+            <button class="nav-button"> <a href="#dashboard-header">Dashboard</button>
+            <button class="nav-button">Support</button>
+            <button class="nav-button">Payments</button>
+            <button class="nav-button">Settings</button>
+        </div>
+        <button class="wallet-button">
+            💰 connect
+        </button>
+    </nav>
+
+    <div class="dashboard-container">
+        <div class="menu-container">
+            <div class="menu-item">📊 Overview</div>
+            <div class="menu-item">💸 Payments methods</div>
+            <div class="menu-item">📝 transaction History</div>
+            <div class="menu-item">🔗 Connected Wallets</div>
+            <div class="menu-item">🛠️ Payment Settings</div>
+            <div class="menu-item logout-item" id="logout-button">
+                <span>🚪</span> Logout
+            </div>
+        </div>
+        
+        <main class="main-content">
+            <header class="dashboard-header" id="dashboard-header">
+                <h1>Zugo Dashboard</h1>
+                <p>Manage your cryptocurrency fee payments and transactions</p>
+            </header>
+            <section class="section" id="payment-method-section" data-target="payment-method-popup">
+                <div class="section-icon">💳</div>
+                <h2 class="section-title">Payment Methods</h2>
+                <p>Select and manage your payment transfer methods</p>
+            </section>
+
+                <section class="section" id="transfer-overview-section">
+                    <div class="section-icon">📊 </div>
+                    <h2 class="section-title">transfer Overview</h2>
+                    <p>Select and manage your payment transfer methods <br></br>
+                    click and scroll down to view.</p>
+                </section>
+
+                <section class="section" id="wallet-connection-section">
+                    <div class="section-icon">🌐</div>
+                    <h2 class="section-title">Connect Wallet</h2>
+                    <p>Link your cryptocurrency wallet for seamless transactions</p>
+                </section>
+
+                <section class="section" id="connect-section">
+                    <div class="section-icon">🏦</div>
+                    <h2 class="section-title">Connect M-Pesa/Bank</h2>
+                    <p>Link your mobile money or bank account for seamless transactions</p>
+                </section>
+            </div>
+        </main>
+
+
+            <!-- Popups -->
+    <div id="payment-method-popup" class="popup">
+        <div class="popup-content">
+            <span class="close-btn">&times;</span>
+            <h3>Choose Payment Method</h3>
+            <div class="popup-options">
+                <button id="bank-transfer-btn">Bank Transfer</button>
+                <button id="mpesa-btn">M-Pesa</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="bank-transfer-popup" class="popup">
+        <div class="popup-content">
+            <span class="close-btn">&times;</span>
+            <h3>Bank Transfer</h3>
+            <div class="popup-options">
+                <button id="saved-bank-btn">Use Saved Bank Details</button>
+                <button id="new-bank-btn">Enter New Bank Details</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="new-bank-details-popup" class="popup">
+        <div class="popup-content">
+            <span class="close-btn">&times;</span>
+            <h3>Enter Bank Details</h3>
+            <form id="bank-details-form">
+                <input type="text" id="account-number" placeholder="Account Number" required minlength="16" maxlength="16">
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="mpesa-btn" class="popup">
+        <div class="popup-content">
+            <span class="close-btn">&times;</span>
+            <h3>Bank Transfer</h3>
+            <div class="popup-options">
+                <button id="saved-mpesa-btn">Use Saved Mpesa Details</button>
+                <button id="new-mpesa-btn">Enter New Mpesa Details</button>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div id="wallet-connect-popup" class="popup">
+        <div class="popup-content">
+            <span class="close-btn">&times;</span>
+            <h3>Connect Cryptocurrency Wallet</h3>
+            <div class="wallet-options">
+                <div class="wallet-option" data-wallet="metamask">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg" alt="MetaMask">
+                    <span>MetaMask</span>
+                </div>
+                <div class="wallet-option" data-wallet="binance">
+                    <img src="https://cryptologos.cc/logos/binance-coin-bnb-logo.png" alt="Binance">
+                    <span>Binance Wallet</span>
+                </div>
+                <div class="wallet-option" data-wallet="coinbase">
+                    <img src="https://cryptologos.cc/logos/coinbase-coin-cb-logo.png" alt="Coinbase">
+                    <span>Coinbase Wallet</span>
+                </div>
+                <div class="wallet-option" data-wallet="trust">
+                    <img src="https://trustwallet.com/assets/images/media/logo.png" alt="Trust Wallet">
+                    <span>Trust Wallet</span>
+                </div>
+                <div class="wallet-option" data-wallet="manual">
+                    <span>Enter Wallet Address Manually</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Manual Wallet Address Entry Popup -->
+    <div id="manual-wallet-popup" class="popup">
+        <div class="popup-content">
+            <span class="close-btn">&times;</span>
+            <h3>Enter Wallet Address</h3>
+            <form id="manual-wallet-form">
+                <select id="wallet-type" required>
+                    <option value="">Select Wallet Type</option>
+                    <option value="ethereum">Ethereum (ETH)</option>
+                    <option value="bitcoin">Bitcoin (BTC)</option>
+                    <option value="bsc">Binance Smart Chain (BSC)</option>
+                    <option value="solana">Solana (SOL)</option>
+                    <option value="polygon">Polygon (MATIC)</option>
+                </select>
+                <input 
+                    type="text" 
+                    id="wallet-address" 
+                    placeholder="Enter Wallet Address" 
+                    required 
+                    pattern="^0x[a-fA-F0-9]{40}$"
+                    title="Please enter a valid wallet address"
+                >
+                <button type="submit">Connect Wallet</button>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- M-Pesa/Bank Connection Popup -->
+<div id="payment-connection-popup" class="popup">
+    <div class="popup-content">
+        <span class="close-btn">&times;</span>
+        <h3>Connect Payment Method</h3>
+        <div class="payment-method-selector">
+            <button id="mpesa-method-btn">M-Pesa</button>
+            <button id="bank-method-btn">Bank Transfer</button>
+        </div>
+    </div>
+</div>
+
+<!-- M-Pesa Details Popup -->
+<div id="mpesa-details-popup" class="popup">
+    <div class="popup-content">
+        <span class="close-btn">&times;</span>
+        <h3>M-Pesa Connection</h3>
+        <form id="mpesa-connection-form">
+            <div class="form-group">
+                <label for="mpesa-phone">Phone Number</label>
+                <input 
+                    type="tel" 
+                    id="mpesa-phone" 
+                    placeholder="Enter 13-digit Phone Number" 
+                    required 
+                    pattern="^(254|0)[17]\d{8}$"
+                    maxlength="13"
+                >
+                <small>Format: 254712345678 or 0712345678</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="paybill-number">Paybill Number</label>
+                <input 
+                    type="text" 
+                    id="paybill-number" 
+                    placeholder="Enter Paybill Number" 
+                    required 
+                    pattern="\d{5,6}"
+                >
+            </div>
+            
+            <div class="form-group">
+                <label for="mpesa-account">Account Number</label>
+                <input 
+                    type="text" 
+                    id="mpesa-account" 
+                    placeholder="Enter Account Number" 
+                    required
+                >
+            </div>
+            
+            <button type="submit">Connect M-Pesa</button>
+        </form>
+    </div>
+</div>
+
+<!-- Bank Details Popup -->
+<div id="bank-details-popup" class="popup">
+    <div class="popup-content">
+        <span class="close-btn">&times;</span>
+        <h3>Bank Account Connection</h3>
+        <form id="bank-connection-form">
+            <div class="form-group">
+                <label for="bank-select">Select Bank</label>
+                <select id="bank-select" required>
+                    <option value="">Choose Your Bank</option>
+                    <option value="equity">Equity Bank</option>
+                    <option value="kcb">KCB Bank</option>
+                    <option value="cooperative">Co-operative Bank</option>
+                    <option value="standard-chartered">Standard Chartered</option>
+                    <option value="barclays">Barclays Bank</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="bank-account">Account Number</label>
+                <input 
+                    type="text" 
+                    id="bank-account" 
+                    placeholder="Enter 16-digit Account Number" 
+                    required 
+                    pattern="\d{16}"
+                    maxlength="16"
+                >
+            </div>
+            
+            <div class="form-group">
+                <label for="bank-branch">Branch Code</label>
+                <input 
+                    type="text" 
+                    id="bank-branch" 
+                    placeholder="Enter Branch Code" 
+                    required
+                >
+            </div>
+            
+            <button type="submit">Connect Bank Account</button>
+        </form>
+    </div>
+</div>
+
+<!-- Cookie Consent Popup -->
+<div id="cookie-consent-popup" class="popup" style="display:flex;">
+    <div class="popup-content cookie-content">
+        <h3>🍪 Cookie Consent</h3>
+        <p>We use cookies to enhance your browsing experience, analyze site traffic, and personalize content. By clicking "Accept", you consent to our use of cookies.</p>
+        <div class="cookie-buttons">
+            <button id="accept-cookies">Accept All Cookies</button>
+            <button id="manage-cookies">Manage Preferences</button>
+        </div>
+    </div>
+</div>
+
+<div id="transfer-overview-popup" class="popup"></div>
+    <div class="popup-content transfer-overview-content">
+        <span class="close-btn">&times;</span>
+        <h3>Transfer Overview & Transaction History</h3>
+        
+        <div class="transaction-summary">
+            <div class="summary-card">
+                <h4>Monthly Summary</h4>
+                <div class="summary-details">
+                    <p>Total Transfers: <span id="total-transfers">12</span></p>
+                    <p>Total Amount: <span id="total-amount">$5,420.50</span></p>
+                    <p>Average Transfer: <span id="avg-transfer">$451.71</span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="transaction-filters">
+            <select id="month-filter">
+                <option value="">All Months</option>
+                <option value="january">January 2024</option>
+                <option value="february">February 2024</option>
+                <option value="march">March 2024</option>
+            </select>
+            <select id="amount-filter">
+                <option value="">All Amounts</option>
+                <option value="low">Low (< $100)</option>
+                <option value="medium">Medium ($100 - $500)</option>
+                <option value="high">High (> $500)</option>
+            </select>
+        </div>
+
+        <div class="transaction-history">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Recipient</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="transaction-list">
+                    <!-- Dynamically populated transactions -->
+                    <tr>
+                        <td>Jan 15, 2024</td>
+                        <td>John Doe</td>
+                        <td>$250.00</td>
+                        <td><span class="status-success">Completed</span></td>
+                    </tr>
+                    <tr>
+                        <td>Feb 3, 2024</td>
+                        <td>Alice Smith</td>
+                        <td>$450.75</td>
+                        <td><span class="status-pending">Pending</span></td>
+                    </tr>
+                    <tr>
+                        <td>Mar 22, 2024</td>
+                        <td>Bob Johnson</td>
+                        <td>$620.50</td>
+                        <td><span class="status-success">Completed</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="transaction-chart">
+            <h4>Monthly Transfer Trend</h4>
+            <div id="chart-placeholder" style="width:100%; height:200px; background:#f0f0f0;">
+                <!-- Placeholder for chart visualization -->
+                Chart Visualization Placeholder
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+    <script>
+            document.addEventListener('DOMContentLoaded', () => {
+        // Function to open a popup
+        function openPopup(popupId) {
+            const popup = document.getElementById(popupId);
+            if (popup) {
+                popup.style.display = 'flex';
+            }
+        }
+
+        // Function to close a popup
+        function closePopup(popup) {
+            popup.style.display = 'none';
+        }
+
+        // Add click event listeners to sections that should open popups
+        document.querySelectorAll('.section[data-target]').forEach(section => {
+            section.addEventListener('click', () => {
+                const targetPopupId = section.getAttribute('data-target');
+                openPopup(targetPopupId);
+            });
+        });
+
+        // Add click event listeners to close buttons
+        document.querySelectorAll('.close-btn').forEach(closeBtn => {
+            closeBtn.addEventListener('click', (e) => {
+                const popup = e.target.closest('.popup');
+                closePopup(popup);
+            });
+        });
+
+        // Add click event listeners to popup buttons
+        document.getElementById('bank-transfer-btn')?.addEventListener('click', () => {
+            closePopup(document.getElementById('payment-method-popup'));
+            openPopup('bank-transfer-popup');
+        });
+
+        document.getElementById('mpesa-btn')?.addEventListener('click', () => {
+            closePopup(document.getElementById('payment-method-popup'));
+            openPopup('mpesa-popup');
+        });
+
+        document.getElementById('new-bank-btn')?.addEventListener('click', () => {
+            closePopup(document.getElementById('bank-transfer-popup'));
+            openPopup('new-bank-details-popup');
+        });
+
+        // Close popup when clicking outside of popup content
+        document.querySelectorAll('.popup').forEach(popup => {
+            popup.addEventListener('click', (e) => {
+                if (e.target === popup) {
+                    closePopup(popup);
+                }
+            });
+        });
+    });
+
+
+    document.addEventListener('DOMContentLoaded', () => {
+    // Wallet Connection Popup Logic
+    const walletConnectionSection = document.getElementById('wallet-connection-section');
+    const walletConnectPopup = document.getElementById('wallet-connect-popup');
+    const manualWalletPopup = document.getElementById('manual-wallet-popup');
+    
+    // Open wallet connection popup
+    walletConnectionSection.addEventListener('click', () => {
+        walletConnectPopup.style.display = 'flex';
+    });
+
+    // Close popup functions
+    document.querySelectorAll('.close-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.closest('.popup').style.display = 'none';
+        });
+    });
+
+    // Wallet option click handling
+    const walletOptions = document.querySelectorAll('.wallet-option');
+    walletOptions.forEach(option => {
+        option.addEventListener('click', () => {
+            const walletType = option.getAttribute('data-wallet');
+            
+            if (walletType === 'manual') {
+                walletConnectPopup.style.display = 'none';
+                manualWalletPopup.style.display = 'flex';
+            } else {
+                // Handle specific wallet connection
+                connectWallet(walletType);
+            }
+        });
+    });
+
+    // Manual wallet form submission
+    const manualWalletForm = document.getElementById('manual-wallet-form');
+    manualWalletForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const walletType = document.getElementById('wallet-type').value;
+        const walletAddress = document.getElementById('wallet-address').value;
+
+        // Validate and process wallet connection
+        if (validateWalletAddress(walletType, walletAddress)) {
+            connectWallet(walletType, walletAddress);
+            manualWalletPopup.style.display = 'none';
+        } else {
+            alert('Invalid wallet address for the selected type');
+        }
+    });
+
+    // Wallet connection function
+    function connectWallet(walletType, address = null) {
+        try {
+            // Simulated wallet connection logic
+            console.log(`Connecting to ${walletType} wallet`);
+            
+            // You would typically integrate with wallet providers here
+            if (address) {
+                console.log(`Using address: ${address}`);
+            }
+
+            // Show success notification
+            alert(`Successfully connected ${walletType} wallet!`);
+        } catch (error) {
+            console.error('Wallet connection failed', error);
+            alert('Wallet connection failed. Please try again.');
+        }
+    }
+
+    // Wallet address validation
+    function validateWalletAddress(walletType, address) {
+        // Basic validation patterns (you can enhance these)
+        const validationPatterns = {
+            'ethereum': /^0x[a-fA-F0-9]{40}$/,
+            'bitcoin': /^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$/,
+            'bsc': /^0x[a-fA-F0-9]{40}$/,
+            'solana': /^[1-9A-HJ-NP-Za-km-z]{32,44}$/,
+            'polygon': /^0x[a-fA-F0-9]{40}$/
+        };
+
+        return validationPatterns[walletType]?.test(address) || false;
+    }
+
+    // Close popups when clicking outside
+    document.querySelectorAll('.popup').forEach(popup => {
+        popup.addEventListener('click', (e) => {
+            if (e.target === popup) {
+                popup.style.display = 'none';
+            }
+        });
+    });
+});
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Connect Section Popup Trigger
+    const connectSection = document.getElementById('connect-section');
+    const paymentConnectionPopup = document.getElementById('payment-connection-popup');
+    const mpesaDetailsPopup = document.getElementById('mpesa-details-popup');
+    const bankDetailsPopup = document.getElementById('bank-details-popup');
+
+    // Open payment connection popup
+    connectSection.addEventListener('click', () => {
+        paymentConnectionPopup.style.display = 'flex';
+    });
+
+    // Close popup functions
+    document.querySelectorAll('.close-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.closest('.popup').style.display = 'none';
+        });
+    }); // Payment method selection handling
+    document.getElementById('mpesa-method-btn').addEventListener('click', () => {
+        paymentConnectionPopup.style.display = 'none';
+        mpesaDetailsPopup.style.display = 'flex';
+    });
+
+    document.getElementById('bank-method-btn').addEventListener('click', () => {
+        paymentConnectionPopup.style.display = 'none';
+        bankDetailsPopup.style.display = 'flex';
+    });
+
+    // M-Pesa form submission
+    const mpesaForm = document.getElementById('mpesa-connection-form');
+    mpesaForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const phone = document.getElementById('mpesa-phone').value;
+        const paybill = document.getElementById('paybill-number').value;
+        const account = document.getElementById('mpesa-account').value;
+
+        // Validate M-Pesa details
+        if (phone && paybill && account) {
+            connectMpesa(phone, paybill, account);
+            mpesaDetailsPopup.style.display = 'none';
+        } else {
+            alert('Please fill in all M-Pesa details.');
+        }
+    });
+
+    // Bank form submission
+    const bankForm = document.getElementById('bank-connection-form');
+    bankForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const bankAccount = document.getElementById('bank-account').value;
+        const bankBranch = document.getElementById('bank-branch').value;
+
+        // Validate bank details
+        if (bankAccount && bankBranch) {
+            connectBank(bankAccount, bankBranch);
+            bankDetailsPopup.style.display = 'none';
+        } else {
+            alert('Please fill in all bank details.');
+        }
+    });
+
+    // Connect M-Pesa function
+    function connectMpesa(phone, paybill, account) {
+        console.log(`Connecting to M-Pesa with Phone: ${phone}, Paybill: ${paybill}, Account: ${account}`);
+        alert('Successfully connected to M-Pesa!');
+    }
+
+    // Connect Bank function
+    function connectBank(account, branch) {
+        console.log(`Connecting to Bank with Account: ${account}, Branch: ${branch}`);
+        alert('Successfully connected to Bank Account!');
+    }
+
+    // Cookie consent handling
+    const cookieConsentPopup = document.getElementById('cookie-consent-popup');
+    const acceptCookiesBtn = document.getElementById('accept-cookies');
+    const manageCookiesBtn = document.getElementById('manage-cookies');
+
+    acceptCookiesBtn.addEventListener('click', () => {
+        cookieConsentPopup.style.display = 'none';
+        alert('Cookies accepted!');
+    });
+
+    manageCookiesBtn.addEventListener('click', () => {
+        alert('Manage your cookie preferences here.');
+    });
+
+    // Close popups when clicking outside
+    document.querySelectorAll('.popup').forEach(popup => {
+        popup.addEventListener('click', (e) => {
+            if (e.target === popup) {
+                popup.style.display = 'none';
+            }
+        });
+    });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Transfer Overview Section Trigger
+    const transferOverviewSection = document.getElementById('transfer-overview-section');
+    const transferOverviewPopup = document.getElementById('transfer-overview-popup');
+
+    // Open transfer overview popup
+    transferOverviewSection.addEventListener('click', () => {
+        transferOverviewPopup.style.display = 'flex';
+    });
+
+    // Close popup when close button is clicked
+    const closeBtn = transferOverviewPopup.querySelector('.close-btn');
+    closeBtn.addEventListener('click', () => {
+        transferOverviewPopup.style.display = 'none';
+    });
+
+    // Filter functionality
+    const monthFilter = document.getElementById('month-filter');
+    const amountFilter = document.getElementById('amount-filter');
+    const transactionList = document.getElementById('transaction-list');
+
+    function filterTransactions() {
+        const selectedMonth = monthFilter.value;
+        const selectedAmountRange = amountFilter.value;
+
+        const rows = transactionList.querySelectorAll('tr');
+        rows.forEach(row => {
+            const date = row.querySelector('td:first-child').textContent;
+            const amount = parseFloat(row.querySelector('td:nth-child(3)').textContent.replace('$', ''));
+
+            let monthMatch = !selectedMonth || date.includes(selectedMonth.split(' ')[0]);
+            let amountMatch = !selectedAmountRange || 
+                (selectedAmountRange === 'low' && amount < 100) ||
+                (selectedAmountRange === 'medium' && amount >= 100 && amount <= 500) ||
+                (selectedAmountRange === 'high' && amount > 500);
+
+            row.style.display = monthMatch && amountMatch ? '' : 'none';
+        });
+    }
+
+    monthFilter.addEventListener('change', filterTransactions);
+    amountFilter.addEventListener('change', filterTransactions);
+
+    // Simulated transaction data update
+    function updateTransactionData() {
+        const totalTransfers = document.getElementById('total-transfers');
+        const totalAmount = document.getElementById('total-amount');
+        const avgTransfer = document.getElementById('avg-transfer');
+
+        // You can replace these with actual calculated values
+        totalTransfers.textContent = '15';
+        totalAmount.textContent = '$6,772.25';
+        avgTransfer.textContent = '$451.48';
+    }
+
+    updateTransactionData();
+
+    // Close popup when clicking outside
+    transferOverviewPopup.addEventListener('click', (e) => {
+        if (e.target === transferOverviewPopup) {
+            transferOverviewPopup.style.display = 'none';
+        }
+    });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Logout button in the menu
+    const logoutButton = document.getElementById('logout-button');
+
+    logoutButton.addEventListener('click', () => {
+        // Show logout confirmation
+        const confirmLogout = confirm('Are you sure you want to log out?');
+        
+        if (confirmLogout) {
+            // Perform logout actions
+            performLogout();
+        }
+    });
+
+    function performLogout() {
+        try {
+            // Clear user authentication data
+            // Example methods (adjust based on your authentication mechanism):
+            localStorage.removeItem('userToken');
+            sessionStorage.clear();
+            
+            // Optional: Invalidate session on backend
+            // fetch('/api/logout', { method: 'POST' })
+            //     .then(response => {
+            //         if (response.ok) {
+            //             redirectToHomePage();
+            //         }
+            //     });
+
+            // Redirect to home page
+            window.location.href = 'home.html'; // Make sure this points to your home page
+        } catch (error) {
+            console.error('Logout error:', error);
+            alert('An error occurred during logout. Please try again.');
+        }
+    }
+});
+    </script>
+
+
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zugo Support Center</title>
+    <link rel="stylesheet" href="support-styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+    
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .ai-avatar-pulse:hover {
+            animation: pulse 1.5s infinite;
+        }
+        .glowing-button {
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+        }
+        .glowing-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.7);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-r from-blue-100 to-blue-200 min-h-screen">
+   
+    <nav class="bg-white shadow-md p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="text-2xl font-bold text-blue-800">Zugo</div>
+            <div class="space-x-4">
+                <a href="home.html" class="bg-blue-500 text-white px-4 py-2 rounded glowing-button">Home</a>
+                <a href="login.html" class="bg-green-500 text-white px-4 py-2 rounded glowing-button">Login</a>
+                <a href="signup.html" class="bg-purple-500 text-white px-4 py-2 rounded glowing-button">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-8">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-blue-800">Zugo Support Center</h1>
+            <p class="text-gray-600">Get instant help with our AI assistant</p>
+        </header>
+
+        <div class="grid md:grid-cols-1 gap-8">
+            
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <div id="ai-assistant" class="mb-4">
+                    <div class="flex items-center mb-4">
+                        <h2 class="text-2xl font-semibold text-blue-700">ZugoAI Assistant</h2>
+                    </div>
+
+                    <div id="chat-window" class="h-96 overflow-y-scroll border p-4 mb-4 bg-black text-white">
+                        <div class="ai-message bg-gray-800 p-2 rounded mb-2 text-green-300">
+                            Hi there! I'm ZugoAI. How can I help you today about Zugo payments?
+                        </div>
+                    </div>
+
+                    <div class="chat-input flex">
+                        <input 
+                            type="text" 
+                            id="user-input" 
+                            placeholder="Ask a question about Zugo..."
+                            class="flex-grow p-2 border rounded-l-lg"
+                        >
+                        <button 
+                            onclick="sendMessage()" 
+                            class="bg-blue-600 text-white px-4 py-2 rounded-r-lg"
+                        >
+                            Send
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function sendMessage() {
+            const userInput = document.getElementById('user-input');
+            const chatWindow = document.getElementById('chat-window');
+
+            if (userInput.value.trim() !== '') {
+                
+                chatWindow.innerHTML += `
+                    <div class="user-message bg-blue-100 p-2 rounded mb-2">
+                        ${userInput.value}
+                    </div>
+                `;
+
+               
+                setTimeout(() => {
+                    chatWindow.innerHTML += `
+                        <div class="ai-message bg-green-100 p-2 rounded mb-2">
+                            ${getAIResponse(userInput.value)}
+                        </div>
+                    `;
+                    chatWindow.scrollTop = chatWindow.scrollHeight;
+                }, 1000);
+
+                userInput.value = '';
+            }
+        }
+
+        function getAIResponse(query) {
+   
+    const responses = {
+        'fees': 'Zugo transaction fees are typically 0.5% per transaction.',
+        'how to pay': 'Connect your crypto wallet, select the payment method, and confirm the transaction.',
+        'supported currencies': 'Zugo supports various cryptocurrencies including Bitcoin, Ethereum, and more.',
+        'transaction time': 'Transactions are usually processed within a few minutes.',
+        'security': 'Zugo employs advanced security measures to protect your transactions.',
+        'account issues': 'For account-related issues, please provide your account ID for assistance.',
+        'default': 'I can help you with questions about Zugo payments, fees, supported currencies, and security.'
+    };
+
+    
+    if (query.toLowerCase().includes('what if my transaction fails')) {
+        return 'If your transaction fails, please check your wallet balance and ensure you have entered the correct details. You can also contact support for further assistance.';
+    }
+
+    const lowerQuery = query.toLowerCase();
+    for (let key in responses) {
+        if (lowerQuery.includes(key)) {
+            return responses[key];
+        }
+    }
+    return responses['default'];
+}
+
+ 
+    </script>
+</body>
+</html>
